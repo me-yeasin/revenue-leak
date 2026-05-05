@@ -1,8 +1,12 @@
 import AuditForm from "@/components/AuditForm";
+import AnalysisLoading from "@/components/AnalysisLoading";
 
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
+      {/* --- FOR TESTING: Uncomment to see the loading screen --- */}
+      {/* <AnalysisLoading /> */}
+
       {/* ── Background Layers ── */}
       <div className="pointer-events-none absolute inset-0 bg-glow" />
       <div className="pointer-events-none absolute inset-0 bg-grid" />
