@@ -1,4 +1,5 @@
 import RevenueCalculator from "@/components/RevenueCalculator";
+import AnalysisLoading from "@/components/AnalysisLoading";
 import { fetchPageSpeedData } from "@/lib/data";
 import { Suspense } from "react";
 
@@ -8,8 +9,10 @@ type PageProps = {
 
 export default function ReportPage({ searchParams }: PageProps) {
   // Next.js 16 best practice: Use Suspense to stream dynamic searchParams and data-heavy report
+  // We use the beautiful AnalysisLoading component as the fallback so it shows instantly
+  // when the client router pushes to this page.
   return (
-    <Suspense fallback={<ReportSkeleton />}>
+    <Suspense fallback={<AnalysisLoading />}>
       <ReportLoader searchParams={searchParams} />
     </Suspense>
   );
@@ -172,19 +175,6 @@ async function ReportContent({ url }: { url: string }) {
           </div>
         </section>
       </main>
-    </div>
-  );
-}
-
-function ReportSkeleton({ url }: { url?: string }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-white">
-      <div className="animate-pulse text-center">
-        <h2 className="text-2xl font-bold mb-4">Analyzing {url || "store"}...</h2>
-        <div className="h-1 w-64 bg-white/10 rounded-full overflow-hidden">
-          <div className="h-full bg-accent animate-[shimmer_2s_infinite]" style={{ width: '40%' }} />
-        </div>
-      </div>
     </div>
   );
 }

@@ -1,25 +1,38 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AnalysisLoading from "./AnalysisLoading";
-import { startAudit } from "@/app/actions";
 
 export default function AuditForm() {
+  const router = useRouter();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // We wrap the server action to handle the loading UI state locally
-  const handleAction = async (formData: FormData) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const url = formData.get("url") as string;
+    
+    if (!url) return;
+
+    // Validate URL (simple check)
+    let cleanUrl = url;
+    if (!url.startsWith("http")) {
+      cleanUrl = `https://${url}`;
+    }
+
+    // Next.js 16 Best Practice: Instant optimistic UI.
+    // By setting state first, the full-screen portal covers the screen at 0ms.
+    // While the animation plays, the Next.js App Router negotiates the transition.
     setIsAnalyzing(true);
-    await startAudit(formData);
-    // Note: redirect() inside a server action will handle the unmounting
+    router.push(`/report?url=${encodeURIComponent(cleanUrl)}`);
   };
 
   return (
     <>
       {isAnalyzing && <AnalysisLoading />}
-      
       <form
-        action={handleAction}
+        onSubmit={handleSubmit}
         className="animate-fade-in-up delay-400 mt-8 w-full max-w-xl sm:mt-10"
       >
         <div className="input-container animate-pulse-glow flex flex-col gap-2 p-2 sm:flex-row sm:items-center sm:gap-0">
