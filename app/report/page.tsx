@@ -43,13 +43,13 @@ function MissingUrlError() {
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        
+
         <h1 className="mb-3 text-2xl font-bold text-white sm:text-3xl">Missing Store URL</h1>
         <p className="mb-8 text-sm leading-relaxed text-muted sm:text-base">
           We need a Shopify store URL to run the performance analysis and calculate your potential revenue leak.
         </p>
 
-        <Link 
+        <Link
           href="/"
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/15 active:scale-[0.98] sm:w-auto sm:text-base border border-white/5 hover:border-white/20"
         >
@@ -76,6 +76,12 @@ async function ReportContent({ url }: { url: string }) {
     return "text-danger border-danger/20 bg-danger/5";
   };
 
+  const getBarBgColor = (score: number) => {
+    if (score >= 90) return "bg-accent";
+    if (score >= 50) return "bg-warning";
+    return "bg-danger";
+  };
+
   return (
     <div className="relative min-h-screen bg-background">
       {/* --- Background Elements --- */}
@@ -96,9 +102,9 @@ async function ReportContent({ url }: { url: string }) {
             <span className="hidden text-xs text-muted lg:block font-medium mr-2">Auditing: <span className="text-white/80">{data.url}</span></span>
             <button className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/3 px-2.5 py-1.5 text-[10px] font-bold text-white transition-all hover:bg-white/10 hover:border-white/20 cursor-pointer sm:gap-2 sm:px-3 sm:text-xs">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent sm:w-3.5 sm:h-3.5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               <span className="hidden xs:inline">Download</span><span className="inline xs:hidden">PDF</span>
             </button>
@@ -133,7 +139,7 @@ async function ReportContent({ url }: { url: string }) {
             <p className="mt-6 max-w-md text-sm text-muted sm:mt-8 sm:text-base">
               Your store&apos;s performance is currently <span className={`font-bold ${getScoreColor(data.score).split(' border-')[0].split(' bg-')[0]}`}>
                 {data.score >= 90 ? "Excellent" : data.score >= 50 ? "Average" : "Poor"}
-              </span>. 
+              </span>.
               {data.score < 90 && " Customers are likely bouncing before they even see your products."}
             </p>
           </div>
@@ -174,7 +180,7 @@ async function ReportContent({ url }: { url: string }) {
                 <span className={`text-xl font-bold ${getScoreColor(data.score).split(' border-')[0].split(' bg-')[0]}`}>{data.score} <span className="text-xs text-subtle font-normal">/ 100</span></span>
               </div>
               <div className="h-4 w-full bg-white/5 rounded-full overflow-hidden">
-                <div className={`h-full ${getScoreColor(data.score).split(' border-')[0].split(' bg-')[0].replace('text-', 'bg-')} transition-all duration-1000 ease-out`} style={{ width: `${data.score}%` }} />
+                <div className={`h-full ${getBarBgColor(data.score)} transition-all duration-1000 ease-out`} style={{ width: `${data.score}%` }} />
               </div>
             </div>
             <div className="space-y-3">
@@ -192,12 +198,12 @@ async function ReportContent({ url }: { url: string }) {
         {/* --- Booking CTA --- */}
         <section className="mt-24 relative">
           <div className="absolute inset-0 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
-          <div className="relative z-10 rounded-2xl bg-white/[0.02] p-8 text-center border border-white/10 shadow-[0_0_40px_-15px_rgba(0,212,126,0.15)] sm:p-12 backdrop-blur-sm overflow-hidden group hover:border-accent/20 transition-colors duration-500">
+          <div className="relative z-10 rounded-2xl bg-white/2 p-8 text-center border border-white/10 shadow-[0_0_40px_-15px_rgba(0,212,126,0.15)] sm:p-12 backdrop-blur-sm overflow-hidden group hover:border-accent/20 transition-colors duration-500">
             <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-accent/30 to-transparent" />
             <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl">Ready to stop the leak?</h2>
             <p className="mx-auto mb-8 max-w-xl text-muted text-lg leading-relaxed">We specialize in building ultra-fast headless Shopify storefronts.</p>
-            <a 
-              href={`mailto:your@email.com?subject=${encodeURIComponent(`Strategy Call Request: ${data.url}`)}&body=${encodeURIComponent(`Hi,\n\nI just ran an audit on my store (${data.url}) and received a performance score of ${data.score}.\n\nI'd like to book a strategy call to discuss fixing this and plugging my revenue leak.\n\nThanks!`)}`}
+            <a
+              href={`mailto:rajunara35@gmail.com?subject=${encodeURIComponent(`Strategy Call Request: ${data.url}`)}&body=${encodeURIComponent(`Hi,\n\nI just ran an audit on my store (${data.url}) and received a performance score of ${data.score}.\n\nI'd like to book a strategy call to discuss fixing this and plugging my revenue leak.\n\nThanks!`)}`}
               className="relative inline-block rounded-xl bg-accent px-8 py-4 text-lg font-bold text-background transition-all hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(0,212,126,0.25)] hover:shadow-[0_0_40px_rgba(0,212,126,0.4)] cursor-pointer"
             >
               Book a Free 20-Min Strategy Call
@@ -223,13 +229,13 @@ function FailedAnalysisError() {
             <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        
+
         <h1 className="mb-3 text-2xl font-bold text-white sm:text-3xl">Audit Failed</h1>
         <p className="mb-8 text-sm leading-relaxed text-muted sm:text-base">
           We couldn&apos;t complete the analysis. This usually happens if the URL is invalid, the store is password-protected, or it blocks automated scanners.
         </p>
 
-        <Link 
+        <Link
           href="/"
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/15 active:scale-[0.98] sm:w-auto sm:text-base border border-white/5 hover:border-white/20"
         >
