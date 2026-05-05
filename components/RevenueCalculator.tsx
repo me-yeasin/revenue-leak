@@ -2,17 +2,20 @@
 
 import { useState, useMemo } from "react";
 
-export default function RevenueCalculator() {
+export default function RevenueCalculator({ score }: { score: number }) {
   const [visitors, setVisitors] = useState(50000);
   const [aov, setAov] = useState(85);
   const [cr, setCr] = useState(2.1);
 
-  // Logic: Every 1s improvement in speed can increase CR by ~7% (standard benchmark)
-  // Let's assume an "Optimized" store is 2s faster or has a 20% CR lift potential.
-  const liftPotential = 0.20; 
+  // Next.js 16 Logic: Dynamic Lift Potential based on real speed score
+  // If score is 100, lift is 0%. If score is 0, lift is 40%.
+  const liftPotential = useMemo(() => {
+    const baseLift = (100 - score) / 100; // 0.0 to 1.0
+    return baseLift * 0.4; // Max 40% lift for a 0 score store
+  }, [score]);
   
   const currentMonthlyRev = useMemo(() => visitors * aov * (cr / 100), [visitors, aov, cr]);
-  const optimizedMonthlyRev = useMemo(() => currentMonthlyRev * (1 + liftPotential), [currentMonthlyRev]);
+  const optimizedMonthlyRev = useMemo(() => currentMonthlyRev * (1 + liftPotential), [currentMonthlyRev, liftPotential]);
   const monthlyLeak = useMemo(() => optimizedMonthlyRev - currentMonthlyRev, [currentMonthlyRev, optimizedMonthlyRev]);
   const annualLeak = useMemo(() => monthlyLeak * 12, [monthlyLeak]);
 
@@ -79,7 +82,7 @@ export default function RevenueCalculator() {
           
           <div className="mt-8 rounded-xl bg-white/5 p-4 border border-white/5">
             <p className="text-xs leading-relaxed text-muted/80 font-medium">
-              *Calculated based on a 20% conversion lift potential from optimizing Core Web Vitals to recommended benchmarks.
+              *Calculated based on a {Math.round(liftPotential * 100)}% conversion lift potential from optimizing Core Web Vitals to recommended benchmarks.
             </p>
           </div>
         </div>

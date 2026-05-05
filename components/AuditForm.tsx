@@ -1,25 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import AnalysisLoading from "./AnalysisLoading";
+import { startAudit } from "@/app/actions";
 
 export default function AuditForm() {
-  const [url, setUrl] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!url) return;
-
+  // We wrap the server action to handle the loading UI state locally
+  const handleAction = async (formData: FormData) => {
     setIsAnalyzing(true);
-
-    // Simulated 15-second delay to match the loading design
-    // In the next phase, we will replace this with a real API call
-    setTimeout(() => {
-      router.push("/report");
-    }, 15000);
+    await startAudit(formData);
+    // Note: redirect() inside a server action will handle the unmounting
   };
 
   return (
@@ -27,7 +19,7 @@ export default function AuditForm() {
       {isAnalyzing && <AnalysisLoading />}
       
       <form
-        onSubmit={handleSubmit}
+        action={handleAction}
         className="animate-fade-in-up delay-400 mt-8 w-full max-w-xl sm:mt-10"
       >
         <div className="input-container animate-pulse-glow flex flex-col gap-2 p-2 sm:flex-row sm:items-center sm:gap-0">
@@ -37,13 +29,12 @@ export default function AuditForm() {
               <path d="M2 10h16M10 2a12.3 12.3 0 0 1 3 8 12.3 12.3 0 0 1-3 8 12.3 12.3 0 0 1-3-8 12.3 12.3 0 0 1 3-8Z" stroke="currentColor" strokeWidth="1.5" />
             </svg>
             <input
-              type="url"
+              type="text"
+              name="url"
               id="store-url-input"
               placeholder="yourstore.myshopify.com"
               autoComplete="url"
               required
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
               className="w-full bg-transparent py-3 text-sm text-white outline-none placeholder:text-subtle sm:text-base"
             />
           </div>
