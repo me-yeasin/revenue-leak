@@ -78,7 +78,7 @@ export default function RevenueCalculator() {
           <p className="text-muted italic">That&apos;s {formatCurrency(annualLeak)} leaking every year.</p>
           
           <div className="mt-8 rounded-xl bg-white/5 p-4 border border-white/5">
-            <p className="text-xs leading-relaxed text-subtle">
+            <p className="text-xs leading-relaxed text-muted/80 font-medium">
               *Calculated based on a 20% conversion lift potential from optimizing Core Web Vitals to recommended benchmarks.
             </p>
           </div>
