@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTransition } from "react";
 import AnalysisLoading from "./AnalysisLoading";
 
 export default function AuditForm() {
   const router = useRouter();
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,16 +21,17 @@ export default function AuditForm() {
       cleanUrl = `https://${url}`;
     }
 
-    // Next.js 16 Best Practice: Instant optimistic UI.
-    // By setting state first, the full-screen portal covers the screen at 0ms.
-    // While the animation plays, the Next.js App Router negotiates the transition.
-    setIsAnalyzing(true);
-    router.push(`/report?url=${encodeURIComponent(cleanUrl)}`);
+    // Next.js 16 Best Practice: useTransition for client routing.
+    // This instantly shows the loading portal (0ms) and automatically 
+    // resets to false when the Next.js router completes the navigation.
+    startTransition(() => {
+      router.push(`/report?url=${encodeURIComponent(cleanUrl)}`);
+    });
   };
 
   return (
     <>
-      {isAnalyzing && <AnalysisLoading />}
+      {isPending && <AnalysisLoading />}
       <form
         onSubmit={handleSubmit}
         className="animate-fade-in-up delay-400 mt-8 w-full max-w-xl sm:mt-10"

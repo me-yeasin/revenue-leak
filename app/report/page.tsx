@@ -67,11 +67,7 @@ async function ReportContent({ url }: { url: string }) {
   const data = await fetchPageSpeedData(url);
 
   if (!data) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-white">
-        <p>Failed to analyze store. Please check the URL and try again.</p>
-      </div>
-    );
+    return <FailedAnalysisError />;
   }
 
   const getScoreColor = (score: number) => {
@@ -209,6 +205,40 @@ async function ReportContent({ url }: { url: string }) {
           </div>
         </section>
       </main>
+    </div>
+  );
+}
+
+function FailedAnalysisError() {
+  return (
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-background px-5 sm:px-8">
+      {/* --- Background Elements --- */}
+      <div className="pointer-events-none absolute inset-0 bg-glow opacity-50" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
+
+      {/* --- Error Content --- */}
+      <div className="glass-card relative z-10 flex w-full max-w-md animate-fade-in-up flex-col items-center p-8 text-center sm:p-12">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-danger/10 border border-danger/20 sm:h-20 sm:w-20">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-danger sm:w-10 sm:h-10">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        
+        <h1 className="mb-3 text-2xl font-bold text-white sm:text-3xl">Audit Failed</h1>
+        <p className="mb-8 text-sm leading-relaxed text-muted sm:text-base">
+          We couldn&apos;t complete the analysis. This usually happens if the URL is invalid, the store is password-protected, or it blocks automated scanners.
+        </p>
+
+        <Link 
+          href="/"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/15 active:scale-[0.98] sm:w-auto sm:text-base border border-white/5 hover:border-white/20"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Try Another URL
+        </Link>
+      </div>
     </div>
   );
 }
