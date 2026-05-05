@@ -1,3 +1,4 @@
+import Link from "next/link";
 import RevenueCalculator from "@/components/RevenueCalculator";
 import AnalysisLoading from "@/components/AnalysisLoading";
 import { fetchPageSpeedData } from "@/lib/data";
@@ -22,14 +23,44 @@ async function ReportLoader({ searchParams }: PageProps) {
   const { url } = await searchParams;
 
   if (!url) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-white">
-        <p>No URL provided. Please go back and enter a store URL.</p>
-      </div>
-    );
+    return <MissingUrlError />;
   }
 
   return <ReportContent url={url} />;
+}
+
+function MissingUrlError() {
+  return (
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-background px-5 sm:px-8">
+      {/* --- Background Elements --- */}
+      <div className="pointer-events-none absolute inset-0 bg-glow opacity-50" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
+
+      {/* --- Error Content --- */}
+      <div className="glass-card relative z-10 flex w-full max-w-md animate-fade-in-up flex-col items-center p-8 text-center sm:p-12">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 border border-white/10 sm:h-20 sm:w-20">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-warning sm:w-10 sm:h-10">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        
+        <h1 className="mb-3 text-2xl font-bold text-white sm:text-3xl">Missing Store URL</h1>
+        <p className="mb-8 text-sm leading-relaxed text-muted sm:text-base">
+          We need a Shopify store URL to run the performance analysis and calculate your potential revenue leak.
+        </p>
+
+        <Link 
+          href="/"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/15 active:scale-[0.98] sm:w-auto sm:text-base border border-white/5 hover:border-white/20"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="shrink-0">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Return to Homepage
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 async function ReportContent({ url }: { url: string }) {
