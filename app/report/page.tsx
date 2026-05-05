@@ -200,9 +200,12 @@ async function ReportContent({ url }: { url: string }) {
             <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-accent/30 to-transparent" />
             <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl">Ready to stop the leak?</h2>
             <p className="mx-auto mb-8 max-w-xl text-muted text-lg leading-relaxed">We specialize in building ultra-fast headless Shopify storefronts.</p>
-            <button className="relative rounded-xl bg-accent px-8 py-4 text-lg font-bold text-background transition-all hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(0,212,126,0.25)] hover:shadow-[0_0_40px_rgba(0,212,126,0.4)] cursor-pointer">
+            <a 
+              href={`mailto:your@email.com?subject=${encodeURIComponent(`Strategy Call Request: ${data.url}`)}&body=${encodeURIComponent(`Hi,\n\nI just ran an audit on my store (${data.url}) and received a performance score of ${data.score}.\n\nI'd like to book a strategy call to discuss fixing this and plugging my revenue leak.\n\nThanks!`)}`}
+              className="relative inline-block rounded-xl bg-accent px-8 py-4 text-lg font-bold text-background transition-all hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(0,212,126,0.25)] hover:shadow-[0_0_40px_rgba(0,212,126,0.4)] cursor-pointer"
+            >
               Book a Free 20-Min Strategy Call
-            </button>
+            </a>
           </div>
         </section>
       </main>
