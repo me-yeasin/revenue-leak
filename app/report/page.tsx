@@ -1,12 +1,21 @@
 import RevenueCalculator from "@/components/RevenueCalculator";
-import { fetchPageSpeedData } from "@/app/actions";
+import { fetchPageSpeedData } from "@/lib/data";
 import { Suspense } from "react";
 
 type PageProps = {
   searchParams: Promise<{ url?: string }>;
 };
 
-export default async function ReportPage({ searchParams }: PageProps) {
+export default function ReportPage({ searchParams }: PageProps) {
+  // Next.js 16 best practice: Use Suspense to stream dynamic searchParams and data-heavy report
+  return (
+    <Suspense fallback={<ReportSkeleton />}>
+      <ReportLoader searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function ReportLoader({ searchParams }: PageProps) {
   const { url } = await searchParams;
 
   if (!url) {
@@ -17,12 +26,7 @@ export default async function ReportPage({ searchParams }: PageProps) {
     );
   }
 
-  // Next.js 16 best practice: Use Suspense to stream the data-heavy report
-  return (
-    <Suspense fallback={<ReportSkeleton url={url} />}>
-      <ReportContent url={url} />
-    </Suspense>
-  );
+  return <ReportContent url={url} />;
 }
 
 async function ReportContent({ url }: { url: string }) {
@@ -172,11 +176,11 @@ async function ReportContent({ url }: { url: string }) {
   );
 }
 
-function ReportSkeleton({ url }: { url: string }) {
+function ReportSkeleton({ url }: { url?: string }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background text-white">
       <div className="animate-pulse text-center">
-        <h2 className="text-2xl font-bold mb-4">Analyzing {url}...</h2>
+        <h2 className="text-2xl font-bold mb-4">Analyzing {url || "store"}...</h2>
         <div className="h-1 w-64 bg-white/10 rounded-full overflow-hidden">
           <div className="h-full bg-accent animate-[shimmer_2s_infinite]" style={{ width: '40%' }} />
         </div>
