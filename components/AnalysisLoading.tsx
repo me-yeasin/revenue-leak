@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 const STEPS = [
   "Connecting to Shopify store...",
@@ -13,8 +14,13 @@ const STEPS = [
 export default function AnalysisLoading() {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    // Disable scrolling on body
+    document.body.style.overflow = "hidden";
+
     const duration = 15000; // 15 seconds
     const intervalTime = 100;
     const increment = 100 / (duration / intervalTime);
@@ -31,11 +37,17 @@ export default function AnalysisLoading() {
       });
     }, intervalTime);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      // Re-enable scrolling when component unmounts
+      document.body.style.overflow = "unset";
+    };
   }, []);
 
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background px-6 text-center">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background px-6 text-center">
       {/* --- Background Effects --- */}
       <div className="pointer-events-none absolute inset-0 bg-glow opacity-40" />
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-20" />
@@ -93,10 +105,11 @@ export default function AnalysisLoading() {
 
       {/* --- Marketing Fact (Footer) --- */}
       <div className="absolute bottom-8 px-6 sm:bottom-12">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-subtle opacity-60 sm:text-xs">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 sm:text-xs">
           Pro Tip: A 1s delay reduces conversion by 7%
         </p>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
